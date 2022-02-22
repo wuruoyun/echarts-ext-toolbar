@@ -6,6 +6,8 @@
 
 This project demonstrates this with a LineChart and [PrimeVue](https://www.primefaces.org/primevue/) toolbar, built with Vue 3 and Vite.
 
+Please visit the [demo online](https://elated-hypatia-ecf24d.netlify.app/).
+
 > The code is written in a way more for demonstration, rather than reusability.
 
 ## Features
