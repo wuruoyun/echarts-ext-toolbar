@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, computed } from 'vue'
 import Toolbar from 'primevue/toolbar'
 import Button from 'primevue/button'
 import VChart from "vue-echarts"
 
-import { use } from 'echarts/core'
+import { use, ComposeOption } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
 import type { Interaction } from '../types'
@@ -12,22 +12,27 @@ import { isPolyLineIntersectsBox } from '../utils/IntersectionUtil'
 
 import {
   TitleComponent,
+  TitleComponentOption,
   GridComponent,
-  TooltipComponent,
-  LegendComponent,
-  ToolboxComponent,
+  GridComponentOption,
   DataZoomComponent,
-  BrushComponent
+  DataZoomComponentOption,
+  BrushComponent,
+  BrushComponentOption
 } from 'echarts/components'
+
+type ECOption = ComposeOption<
+  | TitleComponentOption
+  | GridComponentOption
+  | DataZoomComponentOption
+  | BrushComponentOption
+>
 
 use([
   CanvasRenderer,
   LineChart,
   TitleComponent,
   GridComponent,
-  TooltipComponent,
-  LegendComponent,
-  ToolboxComponent,
   DataZoomComponent,
   BrushComponent
 ])
@@ -63,7 +68,7 @@ function _getLineOpacity(selected: number[]) {
   })
 }
 
-const option = computed(() => {
+const option = computed<ECOption>(() => {
   return {
     title: {
       text: 'My Line Chart',
@@ -73,10 +78,9 @@ const option = computed(() => {
       type: 'value',
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
     },
     brush: { // with brush, the 
-      toolbox: [''], // trick to hide the toolbox in the chart
       xAxisIndex: 0,
       throttleType: 'debounce',
       throttleDelay: 100,
