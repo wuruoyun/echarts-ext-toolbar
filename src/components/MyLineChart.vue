@@ -37,7 +37,7 @@ use([
   BrushComponent
 ])
 
-const chart = ref()
+const chart = ref<InstanceType<typeof VChart> | null>(null)
 let interaction = ref<Interaction>('NAVIGATE')
 const rawData = ref([
   [150, 230, 224, 218, 135, 147, 260],
@@ -115,7 +115,7 @@ function handleBrushEnd(params: any) {
   if (interaction.value === 'ZOOM') {
     if (areas && areas.length === 1) {
       // zoom to the brush area
-      chart.value.dispatchAction({
+      chart.value?.dispatchAction({
         type: 'dataZoom',
         batch: [{
           startValue: coordRange[0][0],
@@ -138,12 +138,12 @@ function handleBrushEnd(params: any) {
         }
       })
     }
-    chart.value.setOption({
+    chart.value?.setOption({
       series: _getLineOpacity(seriesSelected)
     })
   }
   // remove the brush area
-  chart.value.dispatchAction({
+  chart.value?.dispatchAction({
     type: 'brush',
     areas: []
   })
@@ -152,14 +152,14 @@ function handleBrushEnd(params: any) {
 function handleClick(params: any) {
   if (interaction.value === 'SELECT') {
     // clear the selection, alternatively may select a single serie close to the click point
-    chart.value.setOption({
+    chart.value?.setOption({
       series: _getLineOpacity([])
     })
   }
 }
 
 function activateZoom() {
-  chart.value.dispatchAction({
+  chart.value?.dispatchAction({
     type: 'takeGlobalCursor',
     key: 'brush',
     brushOption: {
@@ -171,7 +171,7 @@ function activateZoom() {
 }
 
 function activateSelect() {
-  chart.value.dispatchAction({
+  chart.value?.dispatchAction({
     type: 'takeGlobalCursor',
     key: 'brush',
     brushOption: {
@@ -183,10 +183,10 @@ function activateSelect() {
 }
 
 function activateNavigate() {
-  chart.value.dispatchAction({
+  chart.value?.dispatchAction({
     type: 'takeGlobalCursor'
   })
-  chart.value.dispatchAction({
+  chart.value?.dispatchAction({
     type: 'brush',
     areas: []
   })
@@ -195,7 +195,7 @@ function activateNavigate() {
 
 function resetZoom() {
   // zoom to the full range
-  chart.value.dispatchAction({
+  chart.value?.dispatchAction({
     type: 'dataZoom',
     batch: [
       {
@@ -211,16 +211,18 @@ function resetZoom() {
 }
 
 function downloadImage() {
-  const el = document.createElement("a")
-  const source = chart.value.getDataURL({
+  const source = chart.value?.getDataURL({
     type: 'png',
     backgroundColor: 'white'
   })
-  el.setAttribute("href", source)
-  el.setAttribute("download", 'Chart-download')
-  document.body.appendChild(el)
-  el.click()
-  el.remove()
+  if (source) {
+    const el = document.createElement("a")
+    el.setAttribute("href", source)
+    el.setAttribute("download", 'Chart-download')
+    document.body.appendChild(el)
+    el.click()
+    el.remove()
+  }
 }
 </script>
 
