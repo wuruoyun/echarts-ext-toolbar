@@ -19,7 +19,8 @@ import {
   DataZoomComponentOption,
   BrushComponent,
   BrushComponentOption,
-  ToolboxComponent
+  ToolboxComponent,
+  ToolboxComponentOption
 } from 'echarts/components'
 
 type ECOption = ComposeOption<
@@ -27,6 +28,7 @@ type ECOption = ComposeOption<
   | GridComponentOption
   | DataZoomComponentOption
   | BrushComponentOption
+  | ToolboxComponentOption
 >
 
 use([
@@ -70,7 +72,6 @@ function _getLineOpacity(selected: number[]) {
   })
 }
 
-// @ts-expect-error from brush.toolbox=[''] but still give you auto-complete
 const option = computed<ECOption>(() => {
   return {
     title: {
@@ -84,7 +85,6 @@ const option = computed<ECOption>(() => {
       type: 'value',
     },
     brush: { 
-      toolbox: [''], // trick to hide toolbox icons, but will fail type checking
       xAxisIndex: 0,
       throttleType: 'debounce',
       throttleDelay: 100,
@@ -94,6 +94,9 @@ const option = computed<ECOption>(() => {
       inBrush: {
         colorAlpha: .3
       },
+    },
+    toolbox: {
+      show: false // to hide the brush toolbox
     },
     series: series.value,
     dataZoom: [
