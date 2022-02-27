@@ -26,8 +26,6 @@ The other buttons in the toolbar triggers one-time action:
 
 ## Setup
 
-> If you see warnings like `[Violation] Added non-passive event listener to a scroll-blocking 'mousewheel' event.` in your console, please refer to the related [ECharts issues](https://github.com/apache/echarts/issues?q=non-passive).
-
 ```bash
 # install the dependency
 npm install
@@ -38,6 +36,8 @@ npm run dev
 # build the app
 npm run build
 ```
+
+> If you see warnings like `[Violation] Added non-passive event listener to a scroll-blocking 'mousewheel' event.` in your console, please refer to the related [ECharts issues](https://github.com/apache/echarts/issues?q=non-passive).
 
 ## How it works?
 
