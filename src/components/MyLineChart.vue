@@ -18,7 +18,8 @@ import {
   DataZoomComponent,
   DataZoomComponentOption,
   BrushComponent,
-  BrushComponentOption
+  BrushComponentOption,
+  ToolboxComponent
 } from 'echarts/components'
 
 type ECOption = ComposeOption<
@@ -34,7 +35,8 @@ use([
   TitleComponent,
   GridComponent,
   DataZoomComponent,
-  BrushComponent
+  BrushComponent,
+  ToolboxComponent
 ])
 
 const chart = ref<InstanceType<typeof VChart> | null>(null)
@@ -68,6 +70,7 @@ function _getLineOpacity(selected: number[]) {
   })
 }
 
+// @ts-expect-error from brush.toolbox=[''] but still give you auto-complete
 const option = computed<ECOption>(() => {
   return {
     title: {
@@ -80,7 +83,8 @@ const option = computed<ECOption>(() => {
     yAxis: {
       type: 'value',
     },
-    brush: { // with brush, the 
+    brush: { 
+      toolbox: [''], // trick to hide toolbox icons, but will fail type checking
       xAxisIndex: 0,
       throttleType: 'debounce',
       throttleDelay: 100,
