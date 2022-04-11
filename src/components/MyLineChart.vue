@@ -49,25 +49,24 @@ const rawData = ref([
   [80, 130, 109, 128, 89, 76, 100]
 ])
 
+const colors = ['#5470c6', '#91cc75', '#fac858']
+
 const series = computed(() => {
-  return rawData.value.map(s => {
+  return rawData.value.map((s, i) => {
     return {
+      name: '' + i,
       data: s.map((v, i) => [i + 1, v]),
       type: 'line',
-      selectedMode: 'series',
-      emphasis: {
-        focus: 'series'
-      },
     }
   })
 })
 
 function _getLineOpacity(selected: number[]) {
   return rawData.value.map((d, i) => {
+    const color = selected.length === 0 || selected.includes(i) ? colors[i] : 'lightgrey'
     return {
-      lineStyle: {
-        opacity: selected.length === 0 || selected.includes(i) ? 1 : 0.25
-      }
+      lineStyle: { color },
+      itemStyle: { color }
     }
   })
 }
@@ -84,7 +83,7 @@ const option = computed<ECOption>(() => {
     yAxis: {
       type: 'value',
     },
-    brush: { 
+    brush: {
       xAxisIndex: 0,
       throttleType: 'debounce',
       throttleDelay: 100,
@@ -237,54 +236,23 @@ function downloadImage() {
   <div class="flex flex-column">
     <Toolbar class="flex-none">
       <template #end>
-        <Button
-          icon="pi pi-compass"
-          v-tooltip.bottom="'Navigate'"
-          @click="activateNavigate"
-          class="p-button-rounded p-button-text"
-          :class="{ 'p-button-plain': interaction != 'NAVIGATE'}"
-        />
-        <Button
-          icon="pi pi-check-square"
-          v-tooltip.bottom="'Select'"
-          @click="activateSelect"
-          class="p-button-rounded p-button-text"
-          :class="{ 'p-button-plain': interaction != 'SELECT'}"
-        />
-        <Button
-          icon="pi pi-search-plus"
-          v-tooltip.bottom="'Zoom'"
-          @click="activateZoom"
-          class="p-button-rounded p-button-text"
-          :class="{ 'p-button-plain': interaction != 'ZOOM'}"
-        />
-        <Button
-          icon="pi pi-search-minus"
-          v-tooltip.bottom="'Zoom reset'"
-          @click="resetZoom"
+        <Button icon="pi pi-compass" v-tooltip.bottom="'Navigate'" @click="activateNavigate"
+          class="p-button-rounded p-button-text" :class="{ 'p-button-plain': interaction != 'NAVIGATE' }" />
+        <Button icon="pi pi-check-square" v-tooltip.bottom="'Select'" @click="activateSelect"
+          class="p-button-rounded p-button-text" :class="{ 'p-button-plain': interaction != 'SELECT' }" />
+        <Button icon="pi pi-search-plus" v-tooltip.bottom="'Zoom'" @click="activateZoom"
+          class="p-button-rounded p-button-text" :class="{ 'p-button-plain': interaction != 'ZOOM' }" />
+        <Button icon="pi pi-search-minus" v-tooltip.bottom="'Zoom reset'" @click="resetZoom"
           class="p-button-rounded p-button-text p-button-plain" />
-        <Button
-          icon="pi pi-image"
-          v-tooltip.bottom="'Download image'"
-          @click="downloadImage"
-          class="p-button-rounded p-button-text p-button-plain"
-        />
-        <Button
-          icon="pi pi-cog"
-          v-tooltip.bottom="'Other config'"
-          class="p-button-rounded p-button-text p-button-plain"
-        />
+        <Button icon="pi pi-image" v-tooltip.bottom="'Download image'" @click="downloadImage"
+          class="p-button-rounded p-button-text p-button-plain" />
+        <Button icon="pi pi-cog" v-tooltip.bottom="'Other config'"
+          class="p-button-rounded p-button-text p-button-plain" />
       </template>
     </Toolbar>
     <div class="flex-grow-1 relative">
-      <v-chart
-        ref="chart"
-        class="h-full"
-        :option="option"
-        @zr:click="handleClick"
-        @brushEnd="handleBrushEnd"
-        autoresize
-      />
+      <v-chart ref="chart" class="h-full" :option="option" @zr:click="handleClick" @brushEnd="handleBrushEnd"
+        autoresize />
       <!-- <GlassPane/> -->
     </div>
   </div>
